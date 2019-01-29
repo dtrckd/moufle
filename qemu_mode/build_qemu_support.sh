@@ -113,8 +113,8 @@ fi
 
 echo "[*] Uncompressing archive (this will take a while)..."
 
-#rm -rf "qemu-${VERSION}" || exit 1
-#tar xf "$ARCHIVE" || exit 1
+rm -rf "qemu-${VERSION}" || exit 1
+tar xf "$ARCHIVE" || exit 1
 
 echo "[+] Unpacking successful."
 
@@ -129,9 +129,15 @@ cd qemu-$VERSION || exit 1
 
 echo "[*] Applying patches..."
 
-patch -p1 <../patches/elfload.diff || exit 1
-patch -p1 <../patches/cpu-exec.diff || exit 1
-patch -p1 <../patches/syscall.diff || exit 1
+#patch -p1 <../patches/elfload.diff || exit 1
+#patch -p1 <../patches/cpu-exec.diff || exit 1
+#patch -p1 <../patches/syscall.diff || exit 1
+
+for _p in ../patches/*.diff; do
+    if [ "$(echo $_p | cut -c 1)" != "_" ]; then
+        patch -p1 <$_p || exit 1
+    fi
+done
 
 echo "[+] Patching done."
 
